@@ -25,7 +25,7 @@ const Login = () => {
         let res;
         const token = localStorage.getItem('token')
         try {
-          res = await axios.post('http://localhost:3000/login',
+          res = await axios.post('https://mern-ecomm-dj71.onrender.com/login',
             user,{
               headers: {
               "Content-Type":"application/json",
