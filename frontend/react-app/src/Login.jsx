@@ -41,7 +41,7 @@ const Login = () => {
         }
 
 
-        if (res.status===200) {
+        if (res.data.status===200) {
             setemailBool(1)
             setpwdBool(1)
             toast.success('Login Successful!! WELCOME To Rudra Store');
