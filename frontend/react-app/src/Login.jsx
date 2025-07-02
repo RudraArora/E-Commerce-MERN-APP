@@ -116,7 +116,7 @@ const Login = () => {
           </button>
         </div>
       </div>
-      <ToastContainer autoClose={2000} />
+
     </div>
   );
 };
