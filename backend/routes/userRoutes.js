@@ -1,4 +1,4 @@
-const {signup, login, getUsers, getUser, updateUserData, deleteUser} = require( "../controllers/userController.js")
+const {signup, login, getUsers, getUser, updateUserData, deleteUser, tokenData} = require( "../controllers/userController.js")
 
 const express = require("express")
 
@@ -15,5 +15,7 @@ userRoutes.get('/user',getUser)
 userRoutes.put('/update-user',updateUserData)
 
 userRoutes.delete('/remove',deleteUser)
+
+userRoutes.post('/gettoken',tokenData)
 
 module.exports.userRoutes=userRoutes

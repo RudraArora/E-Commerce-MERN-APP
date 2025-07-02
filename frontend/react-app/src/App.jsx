@@ -8,34 +8,56 @@ import { BrowserRouter, Route, Router, Routes } from "react-router"
 import AddCart from './AddCart'
 import { ClothesContext } from './Context/ClothesContext'
 import Login from './Login'
-import Contact from './Contact'
 import Signup from './Signup'
 import { useEffect } from 'react'
 import axios from 'axios';
+import Profile from './Profile'
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
 
   const [clothData, setClothData] = useState({})
   const [cartProducts, setcartProducts] = useState([])
-  const[emailBool, setemailBool] = useState(0)
-  const[pwdBool, setpwdBool] = useState(0)
+
+  const [isLoggedIn, setIsLoggedIn] = useState(()=>
+  {return Boolean(localStorage.getItem("token"))}
+  )
 
   const [clothes, setClothes] = useState([])
 
+  const token = localStorage.getItem('token')
+  // console.log(token)
+  
+  if (token) {
+    const {exp} = jwtDecode(token)
+    if (Date.now() > exp*1000) {
+      //expired
+      localStorage.removeItem('token')
+      setIsLoggedIn(false)
+    }
+  }
+
   const fetchData = async()=>{
     try {
-      const data = await axios.get('https://mern-ecomm-dj71.onrender.com/products')
+      const data = await axios.get('http://localhost:3000/products',{
+        headers:{
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
       setClothes(data?.data.products)
     } catch (error) {
       console.log(error)
     }
   }
   useEffect(()=>{
-    fetchData()
-  },[])
+    if (isLoggedIn) {
+      fetchData()
+    }
+  },[isLoggedIn])
   
 
-    
 
 
   return (
@@ -43,7 +65,7 @@ function App() {
     {/* <Login/> */}
     
       {<BrowserRouter>
-      <ClothesContext.Provider value={{clothData, setClothData, cartProducts, setcartProducts, clothes, setClothes, emailBool, setemailBool, pwdBool, setpwdBool  } }>
+      <ClothesContext.Provider value={{clothData, setClothData, cartProducts, setcartProducts, clothes, setClothes, isLoggedIn, setIsLoggedIn  } }>
         {<Navigation />}
         <Routes>
             <Route path='/clothing' element={<Clothing/>}/>
@@ -51,12 +73,12 @@ function App() {
             <Route path='/clothing/cloth/:name' element={<Cloth/>}/>
             <Route path='/cart' element={<AddCart/>} />
             <Route path='/login' element={<Login/>} />
-            <Route path='/contact' element={<Contact/>} />
+            <Route path='/profile' element={<Profile/>} />
             <Route path='/signup' element={<Signup/>}/>
         </Routes>
       </ClothesContext.Provider>
       </BrowserRouter>}
-      
+      <ToastContainer autoClose={2000} />
     </>
   )
 }

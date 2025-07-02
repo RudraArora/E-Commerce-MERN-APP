@@ -2,16 +2,24 @@ import React, { useState, useEffect, useContext } from 'react';
 import Navigation from './Navigation';
 import { ClothesContext } from './Context/ClothesContext';
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
 
 const AddCart = () => {
   
-  const {clothData, setClothData, cartProducts, setcartProducts, clothes, setClothes} = useContext(ClothesContext)
-  // console.log(cartProducts)
-  // console.log(clothes)
+  const {clothData, setClothData, cartProducts, setcartProducts, clothes, setClothes, isLoggedIn, setIsLoggedIn} = useContext(ClothesContext)
 
   const fetchData = async(req,res) => {
     try {
-      res = await axios.get('https://mern-ecomm-dj71.onrender.com/getProduct')
+      const token = localStorage.getItem('token')
+      res = await axios.get('http://localhost:3000/getProduct',{
+        headers:{
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      if (res?.data.status===500) {
+                toast.info("Please Login First")
+                return
+      }
       setcartProducts(res?.data.products)
 
     } catch (error) {
@@ -19,8 +27,10 @@ const AddCart = () => {
     }
   }
   useEffect(()=>{
-    fetchData()
-  },[])
+    if (isLoggedIn) {
+      fetchData()
+    }
+  },[isLoggedIn])
 
   const deleteProduct = async(id) => {
 
@@ -28,7 +38,7 @@ const AddCart = () => {
 
       let delCartRes
       try {
-        delCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateCartproduct', clothes[id-1])
+        delCartRes = await axios.put('http://localhost:3000/delUpdateCartproduct', clothes[id-1])
       } catch (error) {
         console.log(error)
       }
@@ -39,7 +49,7 @@ const AddCart = () => {
 
       let delRes
       try {
-        delRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateProduct', clothes[id-1])
+        delRes = await axios.put('http://localhost:3000/delUpdateProduct', clothes[id-1])
       } catch (error) {
         console.log(error)
       }
@@ -53,7 +63,7 @@ const AddCart = () => {
 
       let delRes
       try {
-        delRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateProduct', clothes[id-1])
+        delRes = await axios.put('http://localhost:3000/delUpdateProduct', clothes[id-1])
       } catch (error) {
         console.log(error)
       }
@@ -64,7 +74,7 @@ const AddCart = () => {
 
       let delProductRes
       try {
-        delProductRes = axios.delete('https://mern-ecomm-dj71.onrender.com/delCartProduct', {data:{id}})
+        delProductRes = axios.delete('http://localhost:3000/delCartProduct', {data:{id}})
       } catch (error) {
         console.log(error)
       }
@@ -77,7 +87,7 @@ const AddCart = () => {
 
     let addCartRes
       try {
-        addCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpadteCartProduct', {id})
+        addCartRes = await axios.put('http://localhost:3000/addUpadteCartProduct', {id})
 
       } catch (error) {
         console.log(error)
@@ -90,7 +100,7 @@ const AddCart = () => {
 
     let addRes
       try {
-        addRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpdateProduct', {id})
+        addRes = await axios.put('http://localhost:3000/addUpdateProduct', {id})
       } catch (error) {
         console.log(error)
       }
@@ -112,12 +122,12 @@ const AddCart = () => {
 
   return (
     <>
-      {/* <Navigation /> */}
-      <div className="px-6 py-8 ">
-        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">{qty===0 ? "Nothing in the Cart!! Do Some Shopping" : "🛒 Your Cart" }</h1>
-        <div className='flex justify-between items-center border-2 m-3.5 p-3 text-3xl bg-red-300 '>
+      
+      <div className="scroll-smooth pt-25 px-6 py-8 ">
+        <h1 className="text-3xl font-bold mb-6 text-center text-amber-50">{qty===0 ? "Nothing in the Cart!! Do Some Shopping" : "🛒 Your Cart" }</h1>
+        <div className='flex justify-between items-center border-2 m-3.5 p-3 text-3xl bg-zinc-600  rounded-2xl'>
           <span>Subtotal ({qty} items) - ₹ {total} /- </span>
-          <button className='border-2 p-2 bg-green-300 rounded-3xl ' >Proceed to Buy</button>
+          <button className='border-2 p-2 bg-amber-300/85 rounded-3xl ' >Proceed to Buy</button>
         </div>
 
         
@@ -147,6 +157,7 @@ const AddCart = () => {
           ))}
         </div>
       </div>
+      <ToastContainer autoClose={2000}/>
     </>
   );
 };

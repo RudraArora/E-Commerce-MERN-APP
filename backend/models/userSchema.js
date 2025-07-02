@@ -14,6 +14,7 @@ const user = mongoose.Schema({
     contact:{
         type:Number,
         required:true,
+        unique:true,
         index:true
     },
     password:{

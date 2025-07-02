@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import image from './assets/image.png';
 import { ClothesContext } from './Context/ClothesContext';
 import { useNavigate } from "react-router"
@@ -10,40 +10,60 @@ const Login = () => {
 
     const navigate = useNavigate()
 
-    const {users, emailBool, setemailBool, pwdBool, setpwdBool} = useContext(ClothesContext)
+    const {users, isLoggedIn, setIsLoggedIn} = useContext(ClothesContext)
     
     const[email, setemail] = useState("")
     const[password, setpwd] = useState("")
 
+    
+    
+
     const loginHandler = async() => {
+      
 
         const user = {
           email,
           password
         }
 
+        if (!user.email || !user.password) {
+          toast.warning("Fill all the Fields")
+          return
+        }
+
+        // let res;
+        // const token = localStorage.getItem('token')
+        // try {
+        //   res = await axios.post('http://localhost:3000/login',
+        //     user,{
+        //       headers: {
+        //       "Content-Type":"application/json",
+        //       "Authorization": `Bearer ${token}`
+        //     }
+        //     })
+        //   // console.log(res)
+        // } catch (error) {
+        //   console.log(error)
+        // }
+
+        // if (!res.data.isVerified) {
+        //   localStorage.setItem('token',res.data.refreshToken)
+        // }
+
         let res;
         const token = localStorage.getItem('token')
         try {
-          res = await axios.post('https://mern-ecomm-dj71.onrender.com/login',
-            user,{
-              headers: {
-              "Content-Type":"application/json",
-              "Authorization": `Bearer ${token}`
-            }
-            })
-          console.log(res)
+          res = await axios.post('http://localhost:3000/login',user)
+          // console.log(res)
         } catch (error) {
           console.log(error)
         }
-        if (!res.data.isVerified) {
-          localStorage.setItem('token',res.data.refreshToken)
-        }
-
+        localStorage.setItem('token', res.data.token)
+        setIsLoggedIn((()=>
+        {return Boolean(localStorage.getItem("token"))}
+        ))
 
         if (res.data.status===200) {
-            setemailBool(1)
-            setpwdBool(1)
             toast.success('Login Successful!! WELCOME To Rudra Store');
             setTimeout(()=>{
               navigate('/')
@@ -51,9 +71,7 @@ const Login = () => {
             
         }
         else {
-            setemailBool(0);
-            setpwdBool(0);
-            alert("Invalid credentials");
+            toast.warning("Invalid credentials");
         }
 
     }
@@ -89,7 +107,7 @@ const Login = () => {
             onChange={(e)=>setpwd(e.target.value)}
             className="w-full px-4 py-2 border  border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button
+          <button 
             id="btn"
             onClick={loginHandler}
             className=" w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
