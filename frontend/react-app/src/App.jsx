@@ -29,14 +29,27 @@ function App() {
   const token = localStorage.getItem('token')
   // console.log(token)
   
-  if (token) {
-    const {exp} = jwtDecode(token)
-    if (Date.now() > exp*1000) {
-      //expired
+  function isMalformedToken(t) {
+    return !t || t.split('.').length !== 3
+  }
+
+  useEffect(() => {
+    if (isMalformedToken(token)) {
+      localStorage.removeItem('token')
+      setIsLoggedIn(false)
+      return
+    }
+    try {
+      const { exp } = jwtDecode(token)
+      if (Date.now() >= exp * 1000) {
+        localStorage.removeItem('token')
+        setIsLoggedIn(false)
+      }
+    } catch {
       localStorage.removeItem('token')
       setIsLoggedIn(false)
     }
-  }
+  }, [token])
 
   const fetchData = async()=>{
     try {
