@@ -11,7 +11,7 @@ const AddCart = () => {
   const fetchData = async(req,res) => {
     try {
       const token = localStorage.getItem('token')
-      res = await axios.get('http://localhost:3000/getProduct',{
+      res = await axios.get('https://mern-ecomm-dj71.onrender.com/getProduct',{
         headers:{
           'Authorization': `Bearer ${token}`
         }
@@ -38,7 +38,7 @@ const AddCart = () => {
 
       let delCartRes
       try {
-        delCartRes = await axios.put('http://localhost:3000/delUpdateCartproduct', clothes[id-1])
+        delCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateCartproduct', clothes[id-1])
       } catch (error) {
         console.log(error)
       }
@@ -49,7 +49,7 @@ const AddCart = () => {
 
       let delRes
       try {
-        delRes = await axios.put('http://localhost:3000/delUpdateProduct', clothes[id-1])
+        delRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateProduct', clothes[id-1])
       } catch (error) {
         console.log(error)
       }
@@ -63,7 +63,7 @@ const AddCart = () => {
 
       let delRes
       try {
-        delRes = await axios.put('http://localhost:3000/delUpdateProduct', clothes[id-1])
+        delRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateProduct', clothes[id-1])
       } catch (error) {
         console.log(error)
       }
@@ -74,7 +74,7 @@ const AddCart = () => {
 
       let delProductRes
       try {
-        delProductRes = axios.delete('http://localhost:3000/delCartProduct', {data:{id}})
+        delProductRes = axios.delete('https://mern-ecomm-dj71.onrender.com/delCartProduct', {data:{id}})
       } catch (error) {
         console.log(error)
       }
@@ -87,7 +87,7 @@ const AddCart = () => {
 
     let addCartRes
       try {
-        addCartRes = await axios.put('http://localhost:3000/addUpadteCartProduct', {id})
+        addCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpadteCartProduct', {id})
 
       } catch (error) {
         console.log(error)
@@ -100,7 +100,7 @@ const AddCart = () => {
 
     let addRes
       try {
-        addRes = await axios.put('http://localhost:3000/addUpdateProduct', {id})
+        addRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpdateProduct', {id})
       } catch (error) {
         console.log(error)
       }

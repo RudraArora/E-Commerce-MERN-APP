@@ -25,14 +25,14 @@ const addcartHandler = async(id) => {
   let updateres
 
   try {
-    updateres = await axios.put('http://localhost:3000/addUpdateProduct', clothes[id-1])
+    updateres = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpdateProduct', clothes[id-1])
   } catch (error) {
     console.log(error)
   }
 
   
   try {
-    res = await axios.post('http://localhost:3000/addTocart',updateres.data.updated)
+    res = await axios.post('https://mern-ecomm-dj71.onrender.com/addTocart',updateres.data.updated)
   } catch (error) {
     console.log(error)
   }
