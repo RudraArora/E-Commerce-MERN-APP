@@ -30,9 +30,14 @@ const addcartHandler = async(id) => {
     console.log(error)
   }
 
-  
+
   try {
-    res = await axios.post('https://mern-ecomm-dj71.onrender.com/addTocart',updateres.data.updated)
+    const token = localStorage.getItem('token')
+    res = await axios.post('https://mern-ecomm-dj71.onrender.com/addTocart',updateres.data.updated, {
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
+    })
   } catch (error) {
     console.log(error)
   }

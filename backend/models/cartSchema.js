@@ -22,6 +22,11 @@ const cart = mongoose.Schema({
     quantity:{
         type:Number,
         required:true
+    },
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'USER',
+        required:true
     }
 })
 

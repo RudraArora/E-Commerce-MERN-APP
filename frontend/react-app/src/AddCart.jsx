@@ -33,12 +33,16 @@ const AddCart = () => {
   },[isLoggedIn])
 
   const deleteProduct = async(id) => {
-
+    const token = localStorage.getItem('token')
     if (clothes[id-1].quantity > 1) {
 
       let delCartRes
       try {
-        delCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateCartproduct', clothes[id-1])
+        delCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateCartproduct', clothes[id-1], {
+          headers:{
+            'Authorization': `Bearer ${token}`
+          }
+        })
       } catch (error) {
         console.log(error)
       }
@@ -74,7 +78,7 @@ const AddCart = () => {
 
       let delProductRes
       try {
-        delProductRes = axios.delete('https://mern-ecomm-dj71.onrender.com/delCartProduct', {data:{id}})
+        delProductRes = axios.delete('https://mern-ecomm-dj71.onrender.com/delCartProduct', {data:{id}, headers:{'Authorization': `Bearer ${token}`}})
       } catch (error) {
         console.log(error)
       }
@@ -85,9 +89,15 @@ const AddCart = () => {
 
   const addProduct = async(id) => {
 
+    const token = localStorage.getItem('token')
+
     let addCartRes
       try {
-        addCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpadteCartProduct', {id})
+        addCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpadteCartProduct', {id}, {
+          headers:{
+            'Authorization': `Bearer ${token}`
+          }
+        })
 
       } catch (error) {
         console.log(error)
