@@ -5,7 +5,7 @@ const cartController = async(req,res) => {
 
     const{id,name,price,image,quantity} = req.body
 
-    if (!id || !name || !price || !image || !quantity) {
+    if (!id || !name || !price || !image) {
         return res.status(401).json({message:'fill all the fields', status:401, success:false})
     }
 

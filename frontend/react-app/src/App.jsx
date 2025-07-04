@@ -53,7 +53,7 @@ function App() {
 
   const fetchData = async()=>{
     try {
-      const data = await axios.get('http://localhost:3000/products',{
+      const data = await axios.get('https://mern-ecomm-dj71.onrender.com/products',{
         headers:{
           'Authorization': `Bearer ${token}`
         }

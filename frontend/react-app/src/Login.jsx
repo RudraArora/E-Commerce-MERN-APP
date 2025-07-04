@@ -31,30 +31,10 @@ const Login = () => {
           return
         }
 
-        // let res;
-        // const token = localStorage.getItem('token')
-        // try {
-        //   res = await axios.post('http://localhost:3000/login',
-        //     user,{
-        //       headers: {
-        //       "Content-Type":"application/json",
-        //       "Authorization": `Bearer ${token}`
-        //     }
-        //     })
-        //   // console.log(res)
-        // } catch (error) {
-        //   console.log(error)
-        // }
-
-        // if (!res.data.isVerified) {
-        //   localStorage.setItem('token',res.data.refreshToken)
-        // }
-
         let res;
         const token = localStorage.getItem('token')
         try {
-          res = await axios.post('http://localhost:3000/login',user)
-          // console.log(res)
+          res = await axios.post('https://mern-ecomm-dj71.onrender.com/login',user)
         } catch (error) {
           console.log(error)
         }

@@ -11,7 +11,7 @@ const AddCart = () => {
   const fetchData = async(req,res) => {
     try {
       const token = localStorage.getItem('token')
-      res = await axios.get('http://localhost:3000/getProduct',{
+      res = await axios.get('https://mern-ecomm-dj71.onrender.com/getProduct',{
         headers:{
           'Authorization': `Bearer ${token}`
         }
@@ -39,7 +39,7 @@ const AddCart = () => {
 
       let delCartRes
       try {
-        delCartRes = await axios.put('http://localhost:3000/delUpdateCartproduct', product, {
+        delCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateCartproduct', product, {
           headers:{
             'Authorization': `Bearer ${token}`
           }
@@ -57,7 +57,7 @@ const AddCart = () => {
 
       let delProductRes
       try {
-        delProductRes = axios.delete('http://localhost:3000/delCartProduct', {data:{id}, headers:{'Authorization': `Bearer ${token}`}})
+        delProductRes = await axios.delete('https://mern-ecomm-dj71.onrender.com/delCartProduct', {data:{id}, headers:{'Authorization': `Bearer ${token}`}})
       } catch (error) {
         console.log(error)
       }
@@ -71,7 +71,7 @@ const AddCart = () => {
     const token = localStorage.getItem('token')
     let addCartRes
       try {
-        addCartRes = await axios.put('http://localhost:3000/addUpadteCartProduct', {id}, {
+        addCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpadteCartProduct', {id}, {
           headers:{
             'Authorization': `Bearer ${token}`
           }

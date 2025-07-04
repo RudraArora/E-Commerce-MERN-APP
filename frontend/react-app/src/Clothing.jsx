@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import './clothings.css'
 import { useNavigate } from "react-router"
 import Navigation from './Navigation'
@@ -17,8 +17,6 @@ const Clothing = () => {
         navigate(`/clothing/cloth/${product.name}`)
     }
 
-    // console.log(clothes)
-
 let updateres
 const addcartHandler = async(id) => {
   let res
@@ -28,7 +26,7 @@ const addcartHandler = async(id) => {
   const token = localStorage.getItem('token')
 
   try {
-    res = await axios.post('http://localhost:3000/addTocart',product, {
+    res = await axios.post('https://mern-ecomm-dj71.onrender.com/addTocart',product, {
       headers:{
         'Authorization': `Bearer ${token}`
       }
@@ -37,23 +35,28 @@ const addcartHandler = async(id) => {
     console.log(error)
   }
 
-  try {
-      const token = localStorage.getItem('token')
-      res = await axios.get('http://localhost:3000/getProduct',{
-        headers:{
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      setcartProducts(res?.data.products)
-
-    } catch (error) {
-      console.log(error)
-  }
-  
- 
-        
+  setcartProducts(prev => [...prev,res?.data.product])
+    
   }
 
+  const fetchData = async(req,res) => {
+        try {
+        const token = localStorage.getItem('token')
+        res = await axios.get('https://mern-ecomm-dj71.onrender.com/getProduct',{
+          headers:{
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        setcartProducts(res?.data.products)
+
+      } catch (error) {
+        console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  },[])
     
  return (
     <>
