@@ -26,7 +26,7 @@ const Profile = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.post('https://mern-ecomm-dj71.onrender.com/gettoken', { token });
+      const res = await axios.post('http://localhost:3000/gettoken', { token });
         
       setEmail(res.data.decoded.email);
       setUsername(res.data.decoded.username);
@@ -58,7 +58,7 @@ const Profile = () => {
   const submitNewPassword = async() => {
 
     const token = localStorage.getItem('token');
-    const res = await axios.put('https://mern-ecomm-dj71.onrender.com/update-user', {token,password})
+    const res = await axios.put('http://localhost:3000/update-user', {token,password})
     // console.log(res.status)
     if (res.status === 200) {
       toast.success("Password Change Successful")

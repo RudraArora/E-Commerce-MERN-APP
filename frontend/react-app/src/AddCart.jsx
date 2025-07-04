@@ -11,14 +11,14 @@ const AddCart = () => {
   const fetchData = async(req,res) => {
     try {
       const token = localStorage.getItem('token')
-      res = await axios.get('https://mern-ecomm-dj71.onrender.com/getProduct',{
+      res = await axios.get('http://localhost:3000/getProduct',{
         headers:{
           'Authorization': `Bearer ${token}`
         }
       })
       if (res?.data.status===500) {
-                toast.info("Please Login First")
-                return
+        toast.info("Please Login First")
+        return
       }
       setcartProducts(res?.data.products)
 
@@ -33,12 +33,17 @@ const AddCart = () => {
   },[isLoggedIn])
 
   const deleteProduct = async(id) => {
-
-    if (clothes[id-1].quantity > 1) {
+    const product = clothes.find(c => c.id === id);
+    const token = localStorage.getItem('token')
+    if (product.quantity > 1) {
 
       let delCartRes
       try {
-        delCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateCartproduct', clothes[id-1])
+        delCartRes = await axios.put('http://localhost:3000/delUpdateCartproduct', product, {
+          headers:{
+            'Authorization': `Bearer ${token}`
+          }
+        })
       } catch (error) {
         console.log(error)
       }
@@ -47,34 +52,12 @@ const AddCart = () => {
         return prev.map((item)=> item.id === delCartRes.data.updatedCart.id ? {...item, quantity: delCartRes.data.updatedCart.quantity} : item)
       })
 
-      let delRes
-      try {
-        delRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateProduct', clothes[id-1])
-      } catch (error) {
-        console.log(error)
-      }
-
-      setClothes(prev => {
-        return prev.map((item)=> item.id === delRes.data.updated.id ? {...item, quantity: delRes.data.updated.quantity} : item)
-      })
-
     }
     else{
 
-      let delRes
-      try {
-        delRes = await axios.put('https://mern-ecomm-dj71.onrender.com/delUpdateProduct', clothes[id-1])
-      } catch (error) {
-        console.log(error)
-      }
-
-      setClothes(prev => {
-        return prev.map((item)=> item.id === delRes.data.updated.id ? {...item, quantity: delRes.data.updated.quantity} : item)
-      })
-
       let delProductRes
       try {
-        delProductRes = axios.delete('https://mern-ecomm-dj71.onrender.com/delCartProduct', {data:{id}})
+        delProductRes = axios.delete('http://localhost:3000/delCartProduct', {data:{id}, headers:{'Authorization': `Bearer ${token}`}})
       } catch (error) {
         console.log(error)
       }
@@ -85,29 +68,21 @@ const AddCart = () => {
 
   const addProduct = async(id) => {
 
+    const token = localStorage.getItem('token')
     let addCartRes
       try {
-        addCartRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpadteCartProduct', {id})
+        addCartRes = await axios.put('http://localhost:3000/addUpadteCartProduct', {id}, {
+          headers:{
+            'Authorization': `Bearer ${token}`
+          }
+        })
 
       } catch (error) {
         console.log(error)
       }
-      // console.log(addCartRes.data.updatedCart.quantity)
       
       setcartProducts(prev => {
         return prev.map((item)=> item.id === addCartRes.data.updatedCart.id ? {...item, quantity: addCartRes.data.updatedCart.quantity} : item)
-      })
-
-    let addRes
-      try {
-        addRes = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpdateProduct', {id})
-      } catch (error) {
-        console.log(error)
-      }
-      // console.log(addRes.data.updated.quantity)
-
-      setClothes(prev => {
-        return prev.map((item)=> addRes.data.updated.id === id ? {...item, quantity: addRes.data.updated.quantity} : item)
       })
   }
 

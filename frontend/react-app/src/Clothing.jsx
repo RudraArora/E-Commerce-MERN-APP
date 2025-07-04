@@ -11,43 +11,46 @@ const Clothing = () => {
     const {clothData, setClothData, cartProducts, setcartProducts, clothes, setClothes} = useContext(ClothesContext)
 
     const productClicker = (id) => {
+        const product = clothes.find(c => c.id === id);
+        setClothData(product)
 
-        setClothData(clothes[id-1])
-
-        navigate(`/clothing/cloth/${clothes[id-1].name}`)
+        navigate(`/clothing/cloth/${product.name}`)
     }
 
     // console.log(clothes)
 
-
+let updateres
 const addcartHandler = async(id) => {
   let res
-  let updateres
+  
+  const product = clothes.find(c => c.id === id);
+
+  const token = localStorage.getItem('token')
 
   try {
-    updateres = await axios.put('https://mern-ecomm-dj71.onrender.com/addUpdateProduct', clothes[id-1])
+    res = await axios.post('http://localhost:3000/addTocart',product, {
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
+    })
   } catch (error) {
     console.log(error)
   }
 
-  
   try {
-    res = await axios.post('https://mern-ecomm-dj71.onrender.com/addTocart',updateres.data.updated)
-  } catch (error) {
-    console.log(error)
+      const token = localStorage.getItem('token')
+      res = await axios.get('http://localhost:3000/getProduct',{
+        headers:{
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      setcartProducts(res?.data.products)
+
+    } catch (error) {
+      console.log(error)
   }
-
   
-
-
-setClothes(prev =>
-  prev.map(item =>
-    item.id === updateres.data.updated.id
-      ? { ...item, quantity: updateres.data.updated.quantity }
-      : item
-  )
-);
-  
+ 
         
   }
 
@@ -58,7 +61,9 @@ setClothes(prev =>
       <div className="mt-16 px-8 py-6 min-h-screen">
         <h1 className="text-4xl font-semibold text-amber-50 mb-8 text-center">Collection</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {clothes.map(({ id, name, price, image, quantity }) => (
+          {clothes.map(({ id, name, price, image, quantity }) => {
+            const inCart = cartProducts.some(c => c.id === id);
+            return (
             <div
               key={id}
               onClick={() => productClicker(id)}
@@ -71,14 +76,15 @@ setClothes(prev =>
                 <p className="text-lg font-bold text-green-700 mt-2">₹{price}</p>
               </div>
               <div className="mt-4 px-2 mb-3">
-                    <button disabled={quantity !== 0} onClick={(e) => { 
+                    <button disabled={inCart} onClick={(e) => { 
                         e.stopPropagation()
                         addcartHandler(id)}} className="w-full bg-black text-white py-2 px-4 rounded-lg font-medium hover:bg-amber-700 transition duration-300">
-                    {quantity<1 ? "Add to Cart" : "Added in the Cart" }
+                    {!inCart ? "Add to Cart" : "Added in the Cart" }
                     </button>
                 </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </>

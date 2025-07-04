@@ -71,7 +71,7 @@ const Signup = () => {
 
     let res;
     try {
-      res = await axios.post('https://mern-ecomm-dj71.onrender.com/signup',registerUser)
+      res = await axios.post('http://localhost:3000/signup',registerUser)
       console.log(res)
     } catch (error) {
       console.log(error)

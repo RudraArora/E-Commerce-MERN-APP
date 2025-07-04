@@ -26,6 +26,7 @@ const ensureAuthentication = async(req,res,next) => {
     }
 
     if (user.email===decoded.email) {
+        req.user=user
         next()
     }
     
