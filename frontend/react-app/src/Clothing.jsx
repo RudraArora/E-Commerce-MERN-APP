@@ -61,7 +61,7 @@ const addcartHandler = async(id) => {
  return (
     <>
       {/* <Navigation /> */}
-      <div className="mt-16 px-8 py-6 min-h-screen">
+      <div className="mt-26 px-8 py-6 min-h-screen">
         <h1 className="text-4xl font-semibold text-amber-50 mb-8 text-center">Collection</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {clothes.map(({ id, name, price, image, quantity }) => {

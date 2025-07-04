@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { useNavigate } from "react-router"
 import { ClothesContext } from './Context/ClothesContext';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
+import image from '/favicon.png'
 
 const Navigation = () => {
 
@@ -38,7 +39,9 @@ const Navigation = () => {
   return (
     <nav className="fixed top-0 bg-zinc-50/15 text-white px-6 py-4 shadow-md w-full ">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <div className="text-3xl font-bold">MyShop</div>
+        <div className="text-3xl font-bold w-20 h-20 ">
+          <img className='rounded-full' src={image} alt="shop" />
+        </div>
 
         
         <div className="space-x-9 text-3xl flex ">

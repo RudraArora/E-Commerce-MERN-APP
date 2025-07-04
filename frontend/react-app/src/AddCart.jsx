@@ -98,7 +98,7 @@ const AddCart = () => {
   return (
     <>
       
-      <div className="scroll-smooth pt-25 px-6 py-8 ">
+      <div className="scroll-smooth mt-24 px-6 py-8  ">
         <h1 className="text-3xl font-bold mb-6 text-center text-amber-50">{qty===0 ? "Nothing in the Cart!! Do Some Shopping" : "🛒 Your Cart" }</h1>
         <div className='flex justify-between items-center border-2 m-3.5 p-3 text-3xl bg-zinc-600  rounded-2xl'>
           <span>Subtotal ({qty} items) - ₹ {total} /- </span>

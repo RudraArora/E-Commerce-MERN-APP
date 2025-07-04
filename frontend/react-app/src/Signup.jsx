@@ -94,7 +94,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen mt-20">
       <div className="bg-gray-300 rounded-lg shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-6">
           <img src={image} alt="mountain" className="mx-auto w-2xl h-30" />
