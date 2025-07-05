@@ -116,7 +116,7 @@ const Signup = () => {
   }
 
   const verifyAndSignup = () => {
-    if (Sendotp === Inputotp) {
+    if (Sendotp === Inputotp && Sendotp>0 && Inputotp>0) {
       signupHandler()
     }else{
       toast.warning("Invalid OTP")
