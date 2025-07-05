@@ -17,8 +17,6 @@
 
 - Shopping Cart: Add, remove, and update items in the cart.
 
-- Order Processing: Place orders and view order history.
-
 - Responsive Design: Optimized for desktop and mobile devices.
 
 ## 🧰 Tech Stack
