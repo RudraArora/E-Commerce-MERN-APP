@@ -5,7 +5,7 @@
 
 ## 🔗 Live Demo
 
-- Try it out: https://ecomm-mern-rudra.netlify.app
+- Try it out: https://rudra-store-app.netlify.app/
 
 ## 🚀 Features
 
