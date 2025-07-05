@@ -3,9 +3,13 @@ import image from './assets/image.png';
 import { ClothesContext } from './Context/ClothesContext';
 import { useNavigate } from "react-router";
 import axios from 'axios'
+import emailjs from 'emailjs-com';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 
+
 const Signup = () => {
+
+  emailjs.init("u90jgEhOmmC_q3odr")
 
   const [registerUser, setRegister] = useState({
     username:"",
@@ -14,60 +18,53 @@ const Signup = () => {
     password:""
   })
 
+  const generateOTP = (length = 6) => {
+  let otp = '';
+  for (let i = 0; i < length; i++) {
+    otp += Math.floor(Math.random() * 10);
+  }
+  return otp;
+};
+
   const [emailVerify, setemailVerify] = useState(1)
   const [usernameVerify, setusernameVerify] = useState(1)
   const [contactVerify, setcontactVerify] = useState(1)
   const [passwordVerify, setpasswordVerify] = useState(1)
+  const [Sendotp, setSendotp] = useState()
+  const [Inputotp, setInputotp] = useState()
+  const [verify, setverify] = useState(0)
 
-  const email_pattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
-  const username_pattern = /^[A-Za-z0-9_]{3,16}$/
-  const contact_pattern = /^(?:\+91|0)?[6-9]\d{9}$/
-  const password_pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  const emailPattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/
+  const usernamePattern = /^[A-Za-z0-9_]{3,16}$/
+  const contactPattern = /^(?:\+91|0)?[6-9]\d{9}$/
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 
   const navigate = useNavigate();
 
+  const validateFields = () => {
+  const isEmail = emailPattern.test(registerUser.email);
+  const isUsername = usernamePattern.test(registerUser.username);
+  const isContact = contactPattern.test(registerUser.contact)
+  const isPassword = passwordPattern.test(registerUser.password);
+
+  setemailVerify(isEmail);
+  setusernameVerify(isUsername);
+  setcontactVerify(isContact);
+  setpasswordVerify(isPassword);
+
+  if (!isEmail) toast.warning('Invalid Email');
+  if (!isUsername) toast.warning('Invalid Username');
+  if (!isContact) toast.warning('Invalid Contact');
+  if (!isPassword) toast.warning('Invalid Password');
+
+  return isEmail && isUsername && isContact && isPassword;
+  };
+
   const signupHandler = async() => {
 
-    if (registerUser.username && registerUser.email && registerUser.password && registerUser.contact) {
-      if (!email_pattern.test(registerUser.email)) {
-        toast.warning("Invalid Email")
-        setemailVerify(0)
-      }else{
-        setemailVerify(1)
-      }
-
-      if (!username_pattern.test(registerUser.username)) {
-        toast.warning("Invalid Username")
-        setusernameVerify(0)
-      }else{
-        setusernameVerify(1)
-      }
-
-      if (!contact_pattern.test(registerUser.contact)) {
-        toast.warning("Invalid Contact")
-        setcontactVerify(0)
-      }else{
-        setcontactVerify(1)
-      }
-
-      if (!password_pattern.test(registerUser.password)) {
-        toast.warning("Invalid Password")
-        setpasswordVerify(0)
-      }else{
-        setpasswordVerify(1)
-      }
-    }else{
-      toast.warning("Please Enter Credentials")
+    if (!validateFields()) {
       return
     }
-
-
-
-    if (emailVerify===0 || passwordVerify===0 || contactVerify===0 || usernameVerify===0) {
-      return;
-    }
-
-    
 
     let res;
     try {
@@ -77,6 +74,10 @@ const Signup = () => {
       console.log(error)
     }
     
+    if (res?.data.status === 401) {
+      toast.warning('Fill All the fields')
+    }
+
     if (res?.data.status === 409) {
       toast.info("User Already Exist!!")
       return
@@ -89,9 +90,39 @@ const Signup = () => {
         navigate('/login')
       },2100)
     }
-
-
   };
+
+  const sendOtp = async() => {
+
+    if (!validateFields()) {
+      return
+    }
+
+    const code = generateOTP()
+    setSendotp(code)
+
+    try {
+      await emailjs.send(
+        "service_ododzka",
+        "template_zg9ojqt",
+        {passcode:code, email:registerUser.email}
+      )
+      toast.success('OTP sent! Check your email.');
+      setverify(1)
+    } catch (error) {
+      console.error('EmailJS error:', err);
+      toast.error('Failed to send OTP. Try again.');
+    }
+  }
+
+  const verifyAndSignup = () => {
+    if (Sendotp === Inputotp) {
+      signupHandler()
+    }else{
+      toast.warning("Invalid OTP")
+    }
+    
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen mt-20">
@@ -118,6 +149,18 @@ const Signup = () => {
             onChange={(e) => setRegister(prev =>  ({...prev, email:e.target.value}))}
             className="w-full px-4 py-2 border border-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <div className='flex justify-between'>
+            <button onClick={sendOtp} className='border-black p-1 rounded bg-green-600 text-white mr-1 hover:bg-green-800'>Send OTP</button>
+            { verify === 1 && (
+              <input 
+              className='box-border border px-2 rounded focus:ring-2 focus:outline-none focus:ring-blue-500' 
+              type="number"
+              value={Inputotp}
+              placeholder='Enter OTP'
+              onChange={(e) => setInputotp(e.target.value)}
+              />
+            )}
+          </div>
           <input
             type="text"
             placeholder="Contact"
@@ -139,14 +182,14 @@ const Signup = () => {
             <li>Password length should be at least 8</li>
           </dl>
           <button
-            onClick={signupHandler}
+            onClick={verifyAndSignup}
             className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition duration-200"
           >
             Sign Up
           </button>
         </div>
       </div>
-      <ToastContainer autoClose = {2000} />
+      
     </div>
   );
 };

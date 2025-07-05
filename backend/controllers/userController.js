@@ -10,7 +10,7 @@ const signup = async(req,res)=>{
     const {username,email,contact,password} = req.body
 
     if(!username||!email||!contact||!password){
-        return res.status(401).json({message:'fill all the fields', status:401, success:false})
+        return res.status(200).json({message:'fill all the fields', status:401, success:false})
     }
 
     const existingUser = await USER.findOne({
