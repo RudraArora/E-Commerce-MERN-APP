@@ -33,7 +33,7 @@ const AddCart = () => {
   },[isLoggedIn])
 
   const deleteProduct = async(id) => {
-    const product = clothes.find(c => c.id === id);
+    const product = cartProducts.find(c => c.id === id);
     const token = localStorage.getItem('token')
     if (product.quantity > 1) {
 
